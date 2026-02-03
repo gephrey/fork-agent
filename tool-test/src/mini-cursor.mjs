@@ -45,7 +45,9 @@ async function runAgentWithTools(query, maxIterations = 30) {
 - 正确示例: { command: "pnpm install", workingDirectory: "react-todo-app" }
 这样就对了！workingDirectory 已经切换到 react-todo-app，直接执行命令即可
 
-回复要简洁，只说做了什么`),
+重要规则 - write_file：
+- 当写入 React 组件文件（如 App.tsx）时，如果存在对应的 CSS 文件（如 App.css），在其他 import 语句后加上这个 css 的导入
+`),
         new HumanMessage(query)
     ];
 
