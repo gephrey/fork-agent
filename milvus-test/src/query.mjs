@@ -31,7 +31,7 @@ async function main() {
 
     // 向量搜索
     console.log('Searching for similar diary entries...');
-    const query = '我做饭或学习的日记';
+    const query = '打手游的日记';
     console.log(`Query: "${query}"\n`);
 
     const queryVector = await getEmbedding(query);

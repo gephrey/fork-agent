@@ -1,3 +1,20 @@
+/**
+ * 内存聊天历史演示
+ * 
+ * 本文件演示了如何使用 LangChain 的 InMemoryChatMessageHistory
+ * 在内存中管理多轮对话历史，使 AI 能够基于上下文进行连贯的对话。
+ * 
+ * 实现流程：
+ * 1. 初始化 ChatOpenAI 模型（支持自定义 baseURL）
+ * 2. 创建 InMemoryChatMessageHistory 实例作为对话存储
+ * 3. 定义系统消息，设置 AI 角色为"友好幽默的做菜助手"
+ * 4. 第一轮对话：用户提问 -> 存入历史 -> 调用模型 -> 保存回复
+ * 5. 第二轮对话：用户追问 -> 存入历史 -> 携带完整历史调用模型 -> 保存回复
+ * 6. 最后遍历 history.getMessages() 展示所有保存的消息记录
+ * 
+ * 核心要点：通过每次调用时传入 [systemMessage, ...history.getMessages()]
+ * 实现对话上下文的累积传递，让 AI 能够记住之前的对话内容。
+ */
 import 'dotenv/config';
 import { ChatOpenAI } from '@langchain/openai';
 import { InMemoryChatMessageHistory } from "@langchain/core/chat_history";
