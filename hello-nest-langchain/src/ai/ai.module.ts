@@ -6,9 +6,11 @@ import { ChatOpenAI } from '@langchain/openai';
 
 @Module({
   controllers: [AiController],
-  providers: [AiService,
+  providers: [
+    AiService,
     {
       provide: 'CHAT_MODEL',
+      // 这个项目没有直接在 AiService 里 new 模型，而是通过 Nest 的依赖注入提供了一个模型对象。
       useFactory: (configService: ConfigService) => {
         return new ChatOpenAI({
           model: configService.get('MODEL_NAME'),
@@ -19,7 +21,7 @@ import { ChatOpenAI } from '@langchain/openai';
         });
       },
       inject: [ConfigService],
-    }
+    },
   ],
 })
 export class AiModule {}

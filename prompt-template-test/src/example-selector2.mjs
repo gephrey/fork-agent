@@ -1,16 +1,12 @@
 import 'dotenv/config';
 import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
-import {
-  FewShotPromptTemplate,
-  PromptTemplate,
-} from '@langchain/core/prompts';
+import { FewShotPromptTemplate, PromptTemplate } from '@langchain/core/prompts';
 import { SemanticSimilarityExampleSelector } from '@langchain/core/example_selectors';
 import { Milvus } from '@langchain/community/vectorstores/milvus';
 
 // 演示：使用 SemanticSimilarityExampleSelector 基于「语义相似度」自动从 Milvus 中选择 few-shot 示例
 
-const COLLECTION_NAME =
-  process.env.MILVUS_COLLECTION_NAME ?? 'weekly_report_examples';
+const COLLECTION_NAME = process.env.MILVUS_COLLECTION_NAME ?? 'weekly_report_examples';
 const VECTOR_DIM = 1024;
 
 // 1. 初始化 Chat 模型
@@ -38,7 +34,7 @@ const examplePrompt = PromptTemplate.fromTemplate(
   `用户场景：{scenario}
 生成的周报片段：
 {report_snippet}
----`
+---`,
 );
 
 // 4. 连接 Milvus，并基于已存在的集合创建向量库
@@ -84,9 +80,9 @@ const currentScenario1 =
   '同时也完善了一些文档，方便后面新人接手。整体没有对外大范围发布的新功能。';
 
 // 一个语义上明显不同的场景：偏「首发上线 + 对外宣传」
-const currentScenario2 =
-  '本周完成新一代运营看板的首批功能上线，重点打通埋点和实时数仓链路，' +
-  '并面向运营和市场同学做了多场宣讲，希望更多同学开始使用新能力。';
+// const currentScenario2 =
+//   '本周完成新一代运营看板的首批功能上线，重点打通埋点和实时数仓链路，' +
+//   '并面向运营和市场同学做了多场宣讲，希望更多同学开始使用新能力。';
 
 console.log('\n===== 场景 1：技术债清理为主 =====\n');
 const finalPrompt1 = await fewShotPrompt.format({
@@ -94,16 +90,15 @@ const finalPrompt1 = await fewShotPrompt.format({
 });
 console.log(finalPrompt1);
 
-console.log('\n\n===== 场景 2：新功能首发 + 对外宣传 =====\n');
-const finalPrompt2 = await fewShotPrompt.format({
-  current_scenario: currentScenario2,
-});
-console.log(finalPrompt2);
+// console.log('\n\n===== 场景 2：新功能首发 + 对外宣传 =====\n');
+// const finalPrompt2 = await fewShotPrompt.format({
+//   current_scenario: currentScenario2,
+// });
+// console.log(finalPrompt2);
 
 // 如果需要真正调用模型，可以解开下面注释
-// const stream = await model.stream(finalPrompt);
-// console.log('\n=== AI 输出 ===');
-// for await (const chunk of stream) {
-//   process.stdout.write(chunk.content);
-// }
-
+const stream = await model.stream(finalPrompt1);
+console.log('\n=== AI 输出 ===');
+for await (const chunk of stream) {
+  process.stdout.write(chunk.content);
+}

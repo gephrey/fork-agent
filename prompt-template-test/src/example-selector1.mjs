@@ -1,9 +1,6 @@
 import 'dotenv/config';
 import { ChatOpenAI } from '@langchain/openai';
-import {
-  FewShotPromptTemplate,
-  PromptTemplate,
-} from '@langchain/core/prompts';
+import { FewShotPromptTemplate, PromptTemplate } from '@langchain/core/prompts';
 import { LengthBasedExampleSelector } from '@langchain/core/example_selectors';
 
 // 演示：使用 LengthBasedExampleSelector 自动选择「长度合适」的 few-shot 示例
@@ -23,7 +20,7 @@ const examplePrompt = PromptTemplate.fromTemplate(
   `用户需求：{user_requirement}
 周报片段示例：
 {report_snippet}
----`
+---`,
 );
 
 // 3. 构造一批「长度差异明显」的示例，方便观察选择效果
@@ -43,8 +40,7 @@ const examples = [
       `- 完成 2 场内部分享，会后收到 15 条正向反馈。`,
   },
   {
-    user_requirement:
-      '只是想要一个非常简短的周报，两三句话就够了，主要告诉老板「一切稳定」即可。',
+    user_requirement: '只是想要一个非常简短的周报，两三句话就够了，主要告诉老板「一切稳定」即可。',
     report_snippet: `本周整体运行平稳，未发生重大事故，核心指标均在预期范围内。`,
   },
   {
@@ -68,10 +64,10 @@ const exampleSelector = await LengthBasedExampleSelector.fromExamples(examples, 
 
 // 5. 基于 selector 构建 FewShotPromptTemplate
 const fewShotPrompt = new FewShotPromptTemplate({
+  prefix: '下面是一些不同风格和长度的周报片段示例，你可以从中学习语气和结构：\n',
   examplePrompt,
   exampleSelector,
-  prefix:
-    '下面是一些不同风格和长度的周报片段示例，你可以从中学习语气和结构：\n',
+
   suffix:
     '\n\n现在请根据上面的示例风格，为下面这个场景写一份新的周报：\n' +
     '场景描述：{current_requirement}\n' +
@@ -85,7 +81,6 @@ const currentRequirement =
   '也有新功能上线（接入知识库、日志检索）。希望周报既能体现「把坑都兜住了」，' +
   '又能展示一部分业务侧能感知到的亮点。';
 
-
 const finalPrompt = await fewShotPrompt.format({
   current_requirement: currentRequirement,
 });
@@ -93,7 +88,7 @@ const finalPrompt = await fewShotPrompt.format({
 // console.log(finalPrompt);
 
 const finalPrompt2 = await fewShotPrompt.format({
-    current_requirement: '',
+  current_requirement: '',
 });
 
 console.log(finalPrompt2);
@@ -103,4 +98,3 @@ console.log(finalPrompt2);
 // for await (const chunk of stream) {
 //   process.stdout.write(chunk.content);
 // }
-

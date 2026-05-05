@@ -16,9 +16,13 @@ const model = new ChatOpenAI({
 });
 
 const tools = [
+    // 读取项目文件内容，供模型理解当前代码。
     readFileTool,
+    // 写入或覆盖文件，供模型直接落地代码修改。
     writeFileTool,
+    // 执行终端命令，例如安装依赖、运行测试、启动服务。
     executeCommandTool,
+    // 列出目录内容，供模型探索项目结构。
     listDirectoryTool,
 ];
 
@@ -176,4 +180,3 @@ try {
 } catch (error) {
     console.error(`\n❌ 错误: ${error.message}\n`);
 }
-

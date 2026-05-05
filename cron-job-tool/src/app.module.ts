@@ -22,10 +22,12 @@ import { CronJob } from 'cron';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'admin',
+      password: '196923',
       database: 'hello',
+      // 会在服务启动的时候自动建表
       synchronize: true,
       connectorPackage: 'mysql2',
+      // 会打印 sql 语句
       logging: true,
       entities: [User, Job],
     }),
@@ -73,7 +75,6 @@ export class AppModule implements OnApplicationBootstrap {
     // setTimeout(() => {
     //   this.schedulerRegistry.deleteCronJob('job1');
     // }, 5000);
-
     // const intervalRef = setInterval(() => {
     //   console.log('run interval job');
     // }, 1000);
@@ -81,7 +82,6 @@ export class AppModule implements OnApplicationBootstrap {
     // setTimeout(() => {
     //   this.schedulerRegistry.deleteInterval('interval1');
     // }, 5000);
-
     // const timeoutRef = setTimeout(() => {
     //   console.log('run timeout job');
     // }, 3000);
@@ -91,4 +91,3 @@ export class AppModule implements OnApplicationBootstrap {
     // }, 5000);
   }
 }
-

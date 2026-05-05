@@ -20,7 +20,7 @@ const isProduction = process.env.NODE_ENV === 'production';
       host: isProduction ? 'mysql-prod' : 'localhost',
       port: 3306,
       username: 'root',
-      password: 'admin',
+      password: '196923',
       database: 'book',
       synchronize: true,
       connectorPackage: 'mysql2',

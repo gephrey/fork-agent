@@ -22,10 +22,11 @@ const readFileTool = tool(
     schema: z.object({
       filePath: z.string().describe('文件路径'),
     }),
-  }
+  },
 );
 
 // 2. 写入文件工具
+
 const writeFileTool = tool(
   async ({ filePath, content }) => {
     try {
@@ -46,7 +47,7 @@ const writeFileTool = tool(
       filePath: z.string().describe('文件路径'),
       content: z.string().describe('要写入的文件内容'),
     }),
-  }
+  },
 );
 
 // 3. 执行命令工具（带实时输出）
@@ -54,7 +55,9 @@ const writeFileTool = tool(
 const executeCommandTool = tool(
   async ({ command, workingDirectory }) => {
     const cwd = workingDirectory || process.cwd();
-    console.log(`  [工具调用] execute_command("${command}")${workingDirectory ? ` - 工作目录: ${workingDirectory}` : ''}`);
+    console.log(
+      `  [工具调用] execute_command("${command}")${workingDirectory ? ` - 工作目录: ${workingDirectory}` : ''}`,
+    );
 
     return new Promise((resolve, reject) => {
       // 解析命令和参数
@@ -63,7 +66,7 @@ const executeCommandTool = tool(
       const child = spawn(cmd, args, {
         cwd,
         stdio: 'inherit', // 实时输出到控制台
-        shell: true
+        shell: true,
       });
 
       let errorMsg = '';
@@ -93,7 +96,7 @@ const executeCommandTool = tool(
       command: z.string().describe('要执行的命令'),
       workingDirectory: z.string().optional().describe('工作目录（推荐指定）'),
     }),
-  }
+  },
 );
 
 // 4. 列出目录内容工具
@@ -102,7 +105,7 @@ const listDirectoryTool = tool(
     try {
       const files = await fs.readdir(directoryPath);
       console.log(`  [工具调用] list_directory("${directoryPath}") - 找到 ${files.length} 个项目`);
-      return `目录内容:\n${files.map(f => `- ${f}`).join('\n')}`;
+      return `目录内容:\n${files.map((f) => `- ${f}`).join('\n')}`;
     } catch (error) {
       console.log(`  [工具调用] list_directory("${directoryPath}") - 错误: ${error.message}`);
       return `列出目录失败: ${error.message}`;
@@ -114,8 +117,7 @@ const listDirectoryTool = tool(
     schema: z.object({
       directoryPath: z.string().describe('目录路径'),
     }),
-  }
+  },
 );
 
 export { readFileTool, writeFileTool, executeCommandTool, listDirectoryTool };
-

@@ -4,11 +4,10 @@ import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BookService {
-
   @Inject('BOOK_REPOSITORY')
   private readonly bookRepository: any;
 
-  create(createBookDto: CreateBookDto) {
+  create(_createBookDto: CreateBookDto) {
     return 'This action adds a new book';
   }
 
@@ -21,7 +20,7 @@ export class BookService {
     return `This action returns a #${id} book`;
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
+  update(id: number, _updateBookDto: UpdateBookDto) {
     return `This action updates a #${id} book`;
   }
 

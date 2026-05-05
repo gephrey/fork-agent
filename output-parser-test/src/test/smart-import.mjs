@@ -4,6 +4,15 @@ import { z } from 'zod';
 import mysql from 'mysql2/promise';
 
 // 初始化模型
+console.log({
+  modelName: 'qwen-max' || process.env.MODEL_NAME,
+  apiKey: process.env.OPENAI_API_KEY,
+  temperature: 0,
+  configuration: {
+    baseURL: process.env.OPENAI_BASE_URL,
+  },
+})
+
 const model = new ChatOpenAI({
   modelName: process.env.MODEL_NAME,
   apiKey: process.env.OPENAI_API_KEY,
@@ -30,21 +39,62 @@ const friendsArraySchema = z.array(friendSchema).describe('好友信息数组');
 // 使用 withStructuredOutput 方法
 const structuredModel = model.withStructuredOutput(friendsArraySchema);
 
+async function invokeStructuredModelWithDebug(prompt) {
+  let tokenCount = 0;
+  const startedAt = Date.now();
+  const heartbeat = setInterval(() => {
+    const seconds = Math.round((Date.now() - startedAt) / 1000);
+    console.log(`\n⏳ 模型还在响应中... ${seconds}s，已收到 token: ${tokenCount}`);
+  }, 5000);
+
+  try {
+    console.log('🚀 开始请求模型...');
+    const result = await structuredModel.invoke(prompt, {
+      callbacks: [
+        {
+          handleLLMStart() {
+            console.log('📡 LLM 请求已发出');
+          },
+          handleLLMNewToken(token) {
+            tokenCount += 1;
+            process.stdout.write(token);
+          },
+          handleLLMEnd() {
+            console.log('\n✅ LLM 响应结束');
+          },
+          handleLLMError(error) {
+            console.error('\n❌ LLM 响应出错：', error.message);
+          },
+        },
+      ],
+    });
+
+    console.log(`\n📦 结构化解析完成，用时 ${Date.now() - startedAt}ms`);
+    return result;
+  } finally {
+    clearInterval(heartbeat);
+  }
+}
+
 // 数据库连接配置
 const connectionConfig = {
   host: 'localhost',
   port: 3306,
   user: 'root',
-  password: 'admin',
+  password: '196923',
   multipleStatements: true,
 };
 
 async function extractAndInsert(text) {
+  console.log('🔌 正在连接数据库...');
   const connection = await mysql.createConnection(connectionConfig);
+  console.log('✅ 数据库已连接');
 
   try {
     // 切换到 hello 数据库
+    console.log('🗄️  正在切换到 hello 数据库...');
     await connection.query(`USE hello;`);
+    console.log('✅ 已切换到 hello 数据库');
 
     // 使用 AI 提取结构化信息
     console.log('🤔 正在从文本中提取信息...\n');
@@ -63,9 +113,9 @@ ${text}
    - 手机号：提取手机号码
    - 微信号：提取微信号
 3. 如果某个字段在文本中找不到，请返回 null
-4. 返回格式必须是一个数组，即使只有一个人也要放在数组中`;
+4. 返回格式必须是一个数组，即使只有一个人也要放在json数组中`;
 
-    const results = await structuredModel.invoke(prompt);
+    const results = await invokeStructuredModelWithDebug(prompt);
 
     console.log(`✅ 提取到 ${results.length} 条结构化信息:`);
     console.log(JSON.stringify(results, null, 2));
@@ -99,6 +149,7 @@ ${text}
       result.wechat,
     ]);
 
+    console.log('💾 正在批量插入数据库...');
     const [insertResult] = await connection.query(insertSql, [values]);
     console.log(`✅ 成功批量插入 ${insertResult.affectedRows} 条数据`);
     console.log(`   插入的ID范围：${insertResult.insertId} - ${insertResult.insertId + insertResult.affectedRows - 1}`);

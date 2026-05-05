@@ -1,3 +1,4 @@
+// 这个 service 负责实现增删改查
 import { Injectable } from '@nestjs/common';
 
 type User = {
@@ -10,10 +11,7 @@ type User = {
 @Injectable()
 export class UserService {
   private readonly users = new Map<string, User>([
-    [
-      '001',
-      { id: '001', name: '赵云', email: 'zhaoyun@example.com', role: 'admin' },
-    ],
+    ['001', { id: '001', name: '赵云', email: 'zhaoyun@example.com', role: '196923' }],
     [
       '002',
       {
@@ -23,18 +21,9 @@ export class UserService {
         role: 'manager',
       },
     ],
-    [
-      '003',
-      { id: '003', name: '关羽', email: 'guanyu@example.com', role: 'user' },
-    ],
-    [
-      '004',
-      { id: '004', name: '张飞', email: 'zhangfei@example.com', role: 'user' },
-    ],
-    [
-      '005',
-      { id: '005', name: '刘备', email: 'liubei@example.com', role: 'owner' },
-    ],
+    ['003', { id: '003', name: '关羽', email: 'guanyu@example.com', role: 'user' }],
+    ['004', { id: '004', name: '张飞', email: 'zhangfei@example.com', role: 'user' }],
+    ['005', { id: '005', name: '刘备', email: 'liubei@example.com', role: 'owner' }],
     [
       '006',
       {

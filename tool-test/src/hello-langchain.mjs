@@ -11,5 +11,5 @@ const model = new ChatOpenAI({
     },
 });
 
-const response = await model.invoke("介绍下自己");
+const response = await model.invoke("介绍下自己,你的模型代码是多少");
 console.log(response.content);

@@ -5,7 +5,7 @@ async function main() {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "admin",
+    password: "196923",
     multipleStatements: true,
   };
 

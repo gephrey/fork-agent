@@ -12,21 +12,13 @@ export class WebSearchToolService {
 
   constructor() {
     const webSearchArgsSchema = z.object({
-      query: z
-        .string()
-        .min(1)
-        .describe('搜索关键词，例如：公司年报、某个事件等'),
-      count: z
-        .number()
-        .int()
-        .min(1)
-        .max(20)
-        .optional()
-        .describe('返回的搜索结果数量，默认 10 条'),
+      query: z.string().min(1).describe('搜索关键词，例如：公司年报、某个事件等'),
+      count: z.number().int().min(1).max(20).optional().describe('返回的搜索结果数量，默认 10 条'),
     });
 
     this.tool = tool(
       async ({ query, count }: { query: string; count?: number }) => {
+        console.log('web-searching...');
         const apiKey = this.configService.get<string>('BOCHA_API_KEY');
         if (!apiKey) {
           return 'Bocha Web Search 的 API Key 未配置（环境变量 BOCHA_API_KEY），请先在服务端配置后再重试。';
@@ -98,5 +90,3 @@ URL: ${page.url}
     );
   }
 }
-
-

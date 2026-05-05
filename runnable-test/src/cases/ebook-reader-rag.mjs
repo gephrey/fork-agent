@@ -1,11 +1,11 @@
-import "dotenv/config";
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { RunnableSequence, RunnableLambda } from "@langchain/core/runnables";
-import { MilvusClient, MetricType } from "@zilliz/milvus2-sdk-node";
-import { PromptTemplate } from "@langchain/core/prompts";
-import { StringOutputParser } from "@langchain/core/output_parsers";
+import 'dotenv/config';
+import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
+import { RunnableSequence, RunnableLambda } from '@langchain/core/runnables';
+import { MilvusClient, MetricType } from '@zilliz/milvus2-sdk-node';
+import { PromptTemplate } from '@langchain/core/prompts';
+import { StringOutputParser } from '@langchain/core/output_parsers';
 
-const COLLECTION_NAME = "ebook_collection";
+const COLLECTION_NAME = 'ebook_collection';
 const VECTOR_DIM = 1024;
 
 // 初始化 OpenAI Chat 模型
@@ -30,7 +30,7 @@ const embeddings = new OpenAIEmbeddings({
 
 // 初始化原生 Milvus 客户端
 const milvusClient = new MilvusClient({
-  address: "localhost:19530",
+  address: 'localhost:19530',
 });
 
 // 从 Milvus 中检索内容的 Runnable
@@ -48,7 +48,7 @@ const milvusSearch = new RunnableLambda({
         vector: queryVector,
         limit: k,
         metric_type: MetricType.COSINE,
-        output_fields: ["id", "book_id", "chapter_num", "index", "content"],
+        output_fields: ['id', 'book_id', 'chapter_num', 'index', 'content'],
       });
 
       const results = searchResult.results ?? [];
@@ -63,7 +63,7 @@ const milvusSearch = new RunnableLambda({
 
       return { question, retrievedContent };
     } catch (error) {
-      console.error("检索内容时出错:", error.message);
+      console.error('检索内容时出错:', error.message);
       return { question, retrievedContent: [] };
     }
   },
@@ -85,7 +85,7 @@ const promptTemplate = PromptTemplate.fromTemplate(
 4. 回答要准确，符合小说的情节和人物设定
 5. 可以引用原文内容来支持你的回答
 
-AI 助手的回答:`
+AI 助手的回答:`,
 );
 
 // 构建 context + 日志打印的 Runnable
@@ -97,28 +97,24 @@ const buildPromptInput = new RunnableLambda({
       return {
         hasContext: false,
         question,
-        context: "",
+        context: '',
         retrievedContent,
       };
     }
 
     // 打印检索结果
-    console.log("=".repeat(80));
+    console.log('='.repeat(80));
     console.log(`问题: ${question}`);
-    console.log("=".repeat(80));
-    console.log("\n【检索相关内容】");
+    console.log('='.repeat(80));
+    console.log('\n【检索相关内容】');
 
     retrievedContent.forEach((item, i) => {
-      console.log(`\n[片段 ${i + 1}] 相似度: ${item.score ?? "N/A"}`);
+      console.log(`\n[片段 ${i + 1}] 相似度: ${item.score ?? 'N/A'}`);
       console.log(`书籍: ${item.book_id}`);
       console.log(`章节: 第 ${item.chapter_num} 章`);
       console.log(`片段索引: ${item.index}`);
-      const content = item.content ?? "";
-      console.log(
-        `内容: ${content.substring(0, 200)}${
-          content.length > 200 ? "..." : ""
-        }`
-      );
+      const content = item.content ?? '';
+      console.log(`内容: ${content.substring(0, 200)}${content.length > 200 ? '...' : ''}`);
     });
 
     const context = retrievedContent
@@ -127,7 +123,7 @@ const buildPromptInput = new RunnableLambda({
 章节: 第 ${item.chapter_num} 章
 内容: ${item.content}`;
       })
-      .join("\n\n━━━━━\n\n");
+      .join('\n\n━━━━━\n\n');
 
     return {
       hasContext: true,
@@ -142,15 +138,15 @@ const buildPromptInput = new RunnableLambda({
 const ragChain = RunnableSequence.from([
   milvusSearch,
   buildPromptInput,
+  // 处理promptTemplate需要的入参
   new RunnableLambda({
     func: async (input) => {
       const { hasContext, question, context } = input;
 
       if (!hasContext) {
-        const fallback =
-          "抱歉，我没有找到相关的《天龙八部》内容。请尝试换一个问题。";
+        const fallback = '抱歉，我没有找到相关的《天龙八部》内容。请尝试换一个问题。';
         console.log(fallback);
-        return { question, context: "", answer: fallback, noContext: true };
+        return { question, context: '', answer: fallback, noContext: true };
       }
 
       // PromptTemplate 需要 { question, context }
@@ -159,23 +155,25 @@ const ragChain = RunnableSequence.from([
   }),
   promptTemplate,
   model,
-  new StringOutputParser(),
+  // new StringOutputParser(),
+  RunnableLambda.from(async (input) => {
+    return input.content;
+  }),
 ]);
 
-
 async function initMilvusCollection() {
-  console.log("连接到 Milvus...");
+  console.log('连接到 Milvus...');
   await milvusClient.connectPromise;
-  console.log("✓ 已连接\n");
+  console.log('✓ 已连接\n');
 
   try {
     await milvusClient.loadCollection({ collection_name: COLLECTION_NAME });
-    console.log("✓ 集合已加载\n");
+    console.log('✓ 集合已加载\n');
   } catch (error) {
-    if (!error.message.includes("already loaded")) {
+    if (!error.message.includes('already loaded')) {
       throw error;
     }
-    console.log("✓ 集合已处于加载状态\n");
+    console.log('✓ 集合已处于加载状态\n');
   }
 }
 
@@ -184,14 +182,14 @@ async function main() {
     await initMilvusCollection();
 
     const input = {
-      question: "鸠摩智会什么武功？",
+      question: '鸠摩智会什么武功？',
       k: 5,
     };
 
-    console.log("=".repeat(80));
+    console.log('='.repeat(80));
     console.log(`问题: ${input.question}`);
-    console.log("=".repeat(80));
-    console.log("\n【AI 流式回答】\n");
+    console.log('='.repeat(80));
+    console.log('\n【AI 流式回答】\n');
 
     const stream = await ragChain.stream(input);
 
@@ -199,11 +197,10 @@ async function main() {
       process.stdout.write(chunk);
     }
 
-    console.log("\n");
+    console.log('\n');
   } catch (error) {
-    console.error("错误:", error.message);
+    console.error('错误:', error.message);
   }
 }
 
 await main();
-

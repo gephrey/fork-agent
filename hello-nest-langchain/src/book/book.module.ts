@@ -16,7 +16,7 @@ import { BookController } from './book.controller';
           { id: 3, title: 'Book 3' },
         ];
         return {
-          findAll: () => [...books]
+          findAll: () => [...books],
         };
       },
     },

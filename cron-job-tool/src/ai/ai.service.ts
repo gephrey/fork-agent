@@ -15,7 +15,7 @@ import { Runnable } from '@langchain/core/runnables';
  *
  * const database = {
  *   users: {
- *     '001': { id: '001', name: '张三', email: 'zhangsan@example.com', role: 'admin' },
+ *     '001': { id: '001', name: '张三', email: 'zhangsan@example.com', role: '196923' },
  *     '002': { id: '002', name: '李四', email: 'lisi@example.com', role: 'user' },
  *     '003': { id: '003', name: '王五', email: 'wangwu@example.com', role: 'user' },
  *   },

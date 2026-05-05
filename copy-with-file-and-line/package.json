@@ -1,0 +1,44 @@
+{
+  "name": "copy-with-file-and-line",
+  "displayName": "Copy With File And Line",
+  "description": "Copy the active selection's absolute file path and line range.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:copyWithFileAndLine.copy"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "copyWithFileAndLine.copy",
+        "title": "Copy With File And Line"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "copyWithFileAndLine.copy",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.2",
+    "@vscode/vsce": "^2.24.0"
+  }
+}
