@@ -66,7 +66,7 @@ export class AppModule implements OnApplicationBootstrap {
   @Inject(SchedulerRegistry)
   schedulerRegistry: SchedulerRegistry;
 
-  async onApplicationBootstrap() {
+  onApplicationBootstrap() {
     // const job = new CronJob(CronExpression.EVERY_SECOND, () => {
     //   console.log('run job');
     // });

@@ -24,6 +24,9 @@ export class JobService implements OnApplicationBootstrap {
   @Inject(JobAgentService)
   private readonly jobAgentService: JobAgentService;
 
+  /** 正在执行中的 job id，防止同一任务重入 */
+  private readonly runningIds = new Set<string>();
+
   async onApplicationBootstrap() {
     const enabledJobs = await this.entityManager.find(Job, {
       where: { isEnabled: true },
@@ -156,9 +159,7 @@ export class JobService implements OnApplicationBootstrap {
           const result = await this.jobAgentService.runJob(job.instruction);
           this.logger.log(`[job ${job.id}] ${result}`);
         } catch (e) {
-          this.logger.error(
-            `job ${job.id} agent execution error: ${(e as Error).message}`,
-          );
+          this.logger.error(`job ${job.id} agent execution error: ${(e as Error).message}`);
         }
       }, job.everyMs);
 
@@ -186,9 +187,7 @@ export class JobService implements OnApplicationBootstrap {
           const result = await this.jobAgentService.runJob(job.instruction);
           this.logger.log(`[job ${job.id}] ${result}`);
         } catch (e) {
-          this.logger.error(
-            `job ${job.id} agent execution error: ${(e as Error).message}`,
-          );
+          this.logger.error(`job ${job.id} agent execution error: ${(e as Error).message}`);
         }
 
         try {
@@ -240,9 +239,7 @@ export class JobService implements OnApplicationBootstrap {
         const result = await this.jobAgentService.runJob(job.instruction);
         this.logger.log(`[job ${job.id}] ${result}`);
       } catch (e) {
-        this.logger.error(
-          `job ${job.id} agent execution error: ${(e as Error).message}`,
-        );
+        this.logger.error(`job ${job.id} agent execution error: ${(e as Error).message}`);
       }
     });
   }

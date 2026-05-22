@@ -1,3 +1,4 @@
+// 注入除了定时任务之外的其他 tool（禁止在定时任务里跑定时任务）
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ChatOpenAI } from '@langchain/openai';
 import {
@@ -94,4 +95,3 @@ export class JobAgentService {
     }
   }
 }
-
