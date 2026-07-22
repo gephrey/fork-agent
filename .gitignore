@@ -3,3 +3,7 @@ node_modules/
 *-lock.json
 *-lock.*
 *.lock
+*.env
+volumes/
+dist/
+.pnpm-store/
