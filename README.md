@@ -4,7 +4,9 @@
 
 按照 v1、v2、v3 对应每一节代码，可以自己切换分支来看
 
-[Agent 真实简历库](https://gitcode.com/guang-agent/agent-resume)
+[知识库前端](https://gitcode.com/guang-agent/knowledge-hub-frontend)
+
+分支名和后端分支名一一对应，比如 v12、v13
 
 学员记得关注 @神光的幸福生活 公众号接收更新通知
 
