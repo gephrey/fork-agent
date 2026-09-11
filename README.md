@@ -1,3 +1,7 @@
+guang-agent 和 guang-agent2 组织的链接不同：
+
+# guang-agent 的项目链接
+
 [课程主代码库](https://gitcode.com/guang-agent/ai-agent-course-code)
 
 [知识库后端](https://gitcode.com/guang-agent/knowledge-hub-backend)
@@ -5,6 +9,18 @@
 按照 v1、v2、v3 对应每一节代码，可以自己切换分支来看
 
 [知识库前端](https://gitcode.com/guang-agent/knowledge-hub-frontend)
+
+分支名和后端分支名一一对应，比如 v12、v13
+
+# guang-agent2 的项目链接
+
+[课程主代码库](https://gitcode.com/guang-agent2/ai-agent-course-code)
+
+[知识库后端](https://gitcode.com/guang-agent2/knowledge-hub-backend)
+
+按照 v1、v2、v3 对应每一节代码，可以自己切换分支来看
+
+[知识库前端](https://gitcode.com/guang-agent2/knowledge-hub-frontend)
 
 分支名和后端分支名一一对应，比如 v12、v13
 
